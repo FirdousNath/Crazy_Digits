@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.firdous.gridview" >
+
+    <application
+        android:name=".ApplicationClass"
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="Number Game"
+        android:theme="@style/AppTheme" >
+        <activity android:name=".Homescreen" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".SelectLevel"
+            android:label="@string/title_activity_select_level" >
+        </activity>
+        <activity android:name=".SelectDificulty" />
+        <activity
+            android:name=".Tutorial"
+            android:label="@string/title_activity_tutorial" >
+        </activity>
+        <activity
+            android:name=".SelectMode"
+            android:label="@string/title_activity_select_mode" >
+        </activity>
+        <activity
+            android:name=".MarathonMode"
+            android:label="@string/title_activity_marathon_mode" >
+        </activity>
+    </application>
+
+</manifest>

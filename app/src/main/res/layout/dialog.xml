@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#EEE4DA">
+
+    <TextView
+        android:id="@+id/title"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Congratulations"
+        android:textSize="24sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/time"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Total time :"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/time"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/star1"
+            android:layout_width="35dp"
+            android:layout_height="50dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/star2"
+            android:layout_width="35dp"
+            android:layout_height="50dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/star3"
+            android:layout_width="35dp"
+            android:layout_height="50dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/linearLayout3">
+
+        <Button
+            android:id="@+id/retry"
+            android:textColor="#fff"
+            android:background="@drawable/bigrectangle"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/linearLayout"
+            android:layout_weight="1"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="Retry" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:background="@drawable/bigrectangle"
+            android:textColor="#fff"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@+id/retry"
+            android:layout_alignTop="@+id/retry"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="Next" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Challenge Friend"
+        android:background="@drawable/bigrectangle"
+        android:textColor="#fff"
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/button"
+        android:layout_below="@+id/linearLayout3"
+        android:layout_alignRight="@+id/linearLayout3"
+        android:layout_alignEnd="@+id/linearLayout3"
+        android:layout_alignLeft="@+id/linearLayout3"
+        android:layout_alignStart="@+id/linearLayout3"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp" />
+
+</RelativeLayout>

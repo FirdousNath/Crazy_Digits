@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.firdous.gridview.SelectMode"
+    android:background="#EEE4DA">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Select Mode"
+        android:id="@+id/textView6"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_horizontal"
+        android:textSize="30sp"
+        android:textColor="@color/colorPrimary"
+        android:layout_above="@+id/classic"
+        android:layout_marginBottom="50dp" />
+
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/classic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4f3841"
+        android:text="Classic mode"
+        android:textColor="#fff"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/marathon"
+        android:layout_alignStart="@+id/marathon"
+        android:layout_alignRight="@+id/marathon"
+        android:layout_alignEnd="@+id/marathon" />
+
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/marathon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ED6E45"
+        android:text="Marathon mode"
+        android:textColor="#fff"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/classic"
+        android:layout_marginTop="5dp" />
+</RelativeLayout>
