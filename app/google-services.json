@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "894197432122",
-    "firebase_url": "https://number-game-fd5e6.firebaseio.com",
-    "project_id": "number-game-fd5e6",
-    "storage_bucket": "number-game-fd5e6.appspot.com"
+    "project_number": "1093042110801",
+    "firebase_url": "https://crazy-digits-2d7a1.firebaseio.com",
+    "project_id": "crazy-digits-2d7a1",
+    "storage_bucket": "crazy-digits-2d7a1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:894197432122:android:63ddb20630b68022",
+        "mobilesdk_app_id": "1:1093042110801:android:2c0afafc41c4af85",
         "android_client_info": {
-          "package_name": "com.firdous.numbergame"
+          "package_name": "com.firdous.crazydigits"
         }
       },
       "oauth_client": [
         {
-          "client_id": "894197432122-e6grh1endhgttmi3khqrahe32boa6krl.apps.googleusercontent.com",
+          "client_id": "1093042110801-smlk8eumo9scrjtjkflr7hbjvdo3bqm7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.firdous.numbergame",
-            "certificate_hash": "f535c676f76b4286e5117aece8d2ac466c165eda"
+            "package_name": "com.firdous.crazydigits",
+            "certificate_hash": "751f2e7eac20dd34668249ab84f11b55fba0ecb5"
           }
         },
         {
-          "client_id": "894197432122-89f1qk1pgk49ligqordmnv9632vhotqf.apps.googleusercontent.com",
+          "client_id": "1093042110801-revesgt2qk3e96p4rgaa7148gssdmn75.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCTAM2TS6ctNOiSeih_WdrubLK-17309qQ"
+          "current_key": "AIzaSyAlHyBqwapqAOYcQC70xUEc0HWlBxeuwHA"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "894197432122-89f1qk1pgk49ligqordmnv9632vhotqf.apps.googleusercontent.com",
+              "client_id": "1093042110801-revesgt2qk3e96p4rgaa7148gssdmn75.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

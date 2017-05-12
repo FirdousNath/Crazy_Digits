@@ -67,6 +67,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
     Dialog signInDialog;
     DatabaseReference databaseReference;
     FirebaseUser user;
+    long temptime= 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,8 +99,10 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                             at.setVisibility(View.VISIBLE);
                     }
                 }
-                if (chronometer.getTimeElapsed() / 1000.0 < 0.1) {
 
+
+                if (chronometer.getTimeElapsed() / 1000.0 < 0.9 ) {
+                    Log.d("","aaya");
                     chronometer.stop();
                     chronometer.setText("00:00:00");
                     if (showdialog)
@@ -122,6 +125,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showMarathonScore() {
+        simpleChronometer.setText("00:00:00");
         signInDialog=new Dialog(this);
         signInDialog.setCancelable(false);
         signInDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -160,7 +164,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                     {
 
                         databaseReference = FirebaseDatabase.getInstance().
-                                    getReferenceFromUrl("https://number-game-fd5e6.firebaseio.com/Marathon");
+                                    getReferenceFromUrl("https://crazy-digits-2d7a1.firebaseio.com/Marathon");
                         databaseReference.child(user.getUid()).child("Level").
                                     setValue(SelectMode.level);
                         databaseReference.child(user.getUid()).child("Time").
@@ -183,7 +187,8 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         if(SelectMode.level < 10)
         {
             choice=0;
-            MAXINTERVEL=10100;
+            MAXINTERVEL=11100;
+
             switch (SelectMode.level)
             {
                 case 0 :
@@ -219,12 +224,12 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                     MIN = 999999;
                     break;
                 case 8 :
-                    MAXINTERVEL=15100;
+                    MAXINTERVEL=16100;
                     MAX = 99999999;
                     MIN = 9999999;
                     break;
                 default:
-                    MAXINTERVEL=15100;
+                    MAXINTERVEL=16100;
                     MAX = 999999999;
                     MIN = 99999999;
             }
@@ -233,7 +238,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         else
         {
             choice=1;
-            MAXINTERVEL=15100;
+            MAXINTERVEL=16100;
             switch (SelectMode.level)
             {
                 case 10 :
@@ -508,6 +513,8 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                 Log.d(account.getId(),account.getIdToken());
                 firebaseAuthWithGoogle(account);
             } else {
+                Log.d("see", ""+ result.getStatus().getStatusMessage());
+                Log.d("see", ""+ result.getStatus().getStatusCode());
                 dialog.dismiss();
                 mGoogleApiClient.stopAutoManage(MarathonMode.this);
                 mGoogleApiClient.disconnect();
@@ -552,7 +559,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                             dialog.dismiss();
                             signInDialog.dismiss();
                             databaseReference = FirebaseDatabase.getInstance().
-                                    getReferenceFromUrl("https://number-game-fd5e6.firebaseio.com/Marathon");
+                                    getReferenceFromUrl("https://crazy-digits-2d7a1.firebaseio.com/Marathon");
                             databaseReference.child(user.getUid()).child("Level").
                                     setValue(SelectMode.level);
                             databaseReference.child(user.getUid()).child("Time").
