@@ -60,7 +60,7 @@
             android:layout_marginRight="2dp" />
 
         <Button
-            android:id="@+id/share"
+            android:id="@+id/leaderboard"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="45dp"
@@ -86,7 +86,7 @@
         android:id="@+id/linearLayout5">
 
         <Button
-            android:id="@+id/rate"
+            android:id="@+id/share"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="45dp"
@@ -105,7 +105,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="45dp"
-            android:layout_above="@+id/rate"
+            android:layout_above="@+id/share"
             android:background="#4f3841"
             android:text="EXIT"
             style="?android:attr/borderlessButtonStyle"

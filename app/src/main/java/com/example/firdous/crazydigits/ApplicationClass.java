@@ -1,8 +1,6 @@
-package com.example.firdous.gridview;
+package com.example.firdous.crazydigits;
 
 import android.app.Application;
-
-import com.google.firebase.FirebaseApp;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 

@@ -1,4 +1,4 @@
-package com.example.firdous.gridview;
+package com.example.firdous.crazydigits;
 
 /**
  * Created by encrypted on 14/4/17.

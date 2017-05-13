@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#EEE4DA"
-    tools:context="com.example.firdous.gridview.MainActivity">
+    tools:context="com.example.firdous.crazydigits.MainActivity">
 
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.example.firdous.gridview.Chronometer
+            <com.example.firdous.crazydigits.Chronometer
                 android:id="@+id/timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

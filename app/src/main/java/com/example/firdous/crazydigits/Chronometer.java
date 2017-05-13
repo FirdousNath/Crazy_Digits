@@ -1,4 +1,4 @@
-package com.example.firdous.gridview;
+package com.example.firdous.crazydigits;
 
 /**
  * Created by firdous on 4/5/17.
@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.widget.TextView;
+
 import java.text.DecimalFormat;
 
 public class Chronometer extends android.support.v7.widget.AppCompatTextView {

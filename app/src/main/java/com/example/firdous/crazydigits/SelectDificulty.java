@@ -1,4 +1,4 @@
-package com.example.firdous.gridview;
+package com.example.firdous.crazydigits;
 
 import android.content.Context;
 import android.content.Intent;

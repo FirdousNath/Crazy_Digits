@@ -1,4 +1,4 @@
-package com.example.firdous.gridview;
+package com.example.firdous.crazydigits;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -67,7 +67,6 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
     Dialog signInDialog;
     DatabaseReference databaseReference;
     FirebaseUser user;
-    long temptime= 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
