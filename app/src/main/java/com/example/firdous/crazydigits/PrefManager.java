@@ -15,7 +15,6 @@ import java.util.Arrays;
 public class PrefManager {
     private SharedPreferences pref;
     private Context context;
-    private boolean isFirstTime;
     SharedPreferences.Editor editor;
 
     // Shared pref mode

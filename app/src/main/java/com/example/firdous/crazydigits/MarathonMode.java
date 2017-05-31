@@ -101,7 +101,6 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
 
 
                 if (chronometer.getTimeElapsed() / 1000.0 < 0.9 ) {
-                    Log.d("","aaya");
                     chronometer.stop();
                     chronometer.setText("00:00:00");
                     if (showdialog)
