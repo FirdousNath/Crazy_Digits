@@ -30,7 +30,8 @@
             android:name=".MarathonMode"
             android:label="@string/title_activity_marathon_mode" />
         <activity android:name=".OtherMenus" />
-        <activity android:name=".Aboutus"></activity>
+        <activity android:name=".Aboutus" />
+        <activity android:name=".LeaderBoard"></activity>
     </application>
 
 </manifest>

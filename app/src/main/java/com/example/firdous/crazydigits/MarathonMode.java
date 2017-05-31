@@ -164,11 +164,11 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
 
                         databaseReference = FirebaseDatabase.getInstance().
                                     getReferenceFromUrl("https://crazy-digits-2d7a1.firebaseio.com/Marathon");
-                        databaseReference.child(user.getUid()).child("Level").
+                        databaseReference.child(user.getUid()).child("level").
                                     setValue(SelectMode.level);
-                        databaseReference.child(user.getUid()).child("Time").
+                        databaseReference.child(user.getUid()).child("time").
                                     setValue(SelectMode.time / 1000.0);
-                        databaseReference.child(user.getUid()).child("Name").
+                        databaseReference.child(user.getUid()).child("name").
                                     setValue(user.getDisplayName());
                         Toast.makeText(MarathonMode.this, "Scored Shared", Toast.LENGTH_LONG).show();
                         finish();
@@ -559,11 +559,11 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                             signInDialog.dismiss();
                             databaseReference = FirebaseDatabase.getInstance().
                                     getReferenceFromUrl("https://crazy-digits-2d7a1.firebaseio.com/Marathon");
-                            databaseReference.child(user.getUid()).child("Level").
+                            databaseReference.child(user.getUid()).child("level").
                                     setValue(SelectMode.level);
-                            databaseReference.child(user.getUid()).child("Time").
+                            databaseReference.child(user.getUid()).child("time").
                                     setValue(SelectMode.time / 1000.0);
-                            databaseReference.child(user.getUid()).child("Name").
+                            databaseReference.child(user.getUid()).child("name").
                                     setValue(user.getDisplayName());
 
                             Toast.makeText(MarathonMode.this, "Scored Shared", Toast.LENGTH_LONG).show();

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1093042110801-ig82mq492htj7obp0ua43pkqjmfbb6fm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firdous.crazydigits",
+            "certificate_hash": "f535c676f76b4286e5117aece8d2ac466c165eda"
+          }
+        },
+        {
           "client_id": "1093042110801-smlk8eumo9scrjtjkflr7hbjvdo3bqm7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

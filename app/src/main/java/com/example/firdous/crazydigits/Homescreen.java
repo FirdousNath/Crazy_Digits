@@ -62,6 +62,12 @@ public class Homescreen extends AppCompatActivity  {
                 startActivity(new Intent(Homescreen.this, OtherMenus.class));
             }
         });
+        findViewById(R.id.leaderboard).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Homescreen.this, LeaderBoard.class));
+            }
+        });
     }
     @Override
     protected void attachBaseContext(Context newBase) {
