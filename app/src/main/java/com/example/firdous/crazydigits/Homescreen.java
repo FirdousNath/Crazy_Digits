@@ -30,18 +30,17 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.FirebaseDatabase;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Homescreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     PrefManager pref;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     String TAG="see";
-    private GoogleApiClient mGoogleApiClient;
     ProgressDialog dialog;
     FirebaseUser user;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,12 +98,16 @@ public class Homescreen extends AppCompatActivity implements GoogleApiClient.OnC
         findViewById(R.id.leaderboard).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user != null)
-                startActivity(new Intent(Homescreen.this, LeaderBoard.class));
+                if (user != null) {
+                    Intent i = new Intent(Homescreen.this, LeaderBoard.class);
+                    i.putExtra("user", user.getUid());
+                    startActivity(i);
+                }
                 else signIn();
             }
         });
     }
+
     private void signIn() {
         if(mGoogleApiClient == null || !mGoogleApiClient.isConnected())
         {

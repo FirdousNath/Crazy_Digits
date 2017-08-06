@@ -6,7 +6,7 @@
         android:name=".ApplicationClass"
         android:allowBackup="true"
         android:icon="@drawable/logo"
-        android:label="Number Game"
+        android:label="Crazy Digits"
         android:theme="@style/AppTheme">
         <activity android:name=".Homescreen">
             <intent-filter>
