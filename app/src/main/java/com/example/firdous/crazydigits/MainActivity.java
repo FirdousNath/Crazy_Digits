@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -32,8 +33,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<Integer>list;
     int MAX,MIN, MinIntervel, AvgIntervel;
     long timeWhenStopped = 0;
+    PlaySound ps = new PlaySound();
+    int length;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        length = ps.pauseBackgroundMusic();
         super.onCreate(savedInstanceState);
         int avg[],min[];
         switch (SelectDificulty.difficulty)
@@ -158,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int randomNum = rand.nextInt(max - min) + min;
         return randomNum;
     }
+
     void InitializeGrid()
     {
         int randomNum;
@@ -189,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         ResetGrid(list);
     }
+
     void ResetGrid(ArrayList<Integer> list)
     {
         for (int i = 0; i < t.length; i++)
@@ -200,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             t[list.get(i)].setText("" + i);
 
     }
+
     void startCountDown()
     {
         InitializeGrid();
@@ -231,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView temp = (TextView) v;
         if (count < arrayofinput.length && !temp.getText().toString().equalsIgnoreCase("") && Integer.parseInt(temp.getText().toString()) == arrayofinput[count] ) {
             count++;
+            play(0);
             String one=input.getText().toString();
             String inserted=one.substring(0,count);
             String tobeInsert=one.substring(count,one.length());
@@ -253,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 next.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        play(0);
                         dialog.dismiss();
                         callNext();
                     }
@@ -260,20 +269,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 retry.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        play(0);
                         dialog.dismiss();
                         callRetry(nextLevelunlocked);
                     }
                 });
             }
             else ResetGrid(list);
+        } else {
+            play(1);
+            simpleChronometer.setBase(simpleChronometer.getBase() - 800);
+
         }
-        else simpleChronometer.setBase(simpleChronometer.getBase()- 800);
 
     }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
     void callNext()
     {
         if(SelectLevel.postion < SelectLevel.levelStatusArrayList.size()-1) {
@@ -291,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             finish();
         }
     }
+
     void callRetry( boolean isUnlocked)
     {
         if(isUnlocked) {
@@ -378,6 +394,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
+        play(1);
         showPauseDialog();
     }
 
@@ -397,6 +414,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                play(0);
                 dialog.dismiss();
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
                 finish();
@@ -405,6 +423,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                play(0);
+                ps.resumeBackgroundMusic(length);
                 dialog.dismiss();
                 startActivity(new Intent(MainActivity.this, SelectLevel.class));
                 finish();
@@ -413,11 +433,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                play(0);
                 simpleChronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
                 simpleChronometer.start();
                 dialog.dismiss();
             }
         });
 
+    }
+
+    private void play(int type) {
+        try {
+            ps.createSound(this, type);
+            ps.playSound();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

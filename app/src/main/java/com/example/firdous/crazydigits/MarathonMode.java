@@ -41,6 +41,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -58,17 +59,68 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
     int MAX =0, MIN =0;
     long timeWhenStopped = 0, MAXINTERVEL=0;
     boolean showdialog=false;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     String TAG="see";
-    private GoogleApiClient mGoogleApiClient;
     ProgressDialog dialog;
     boolean isAuthenticateUser=false;
     Dialog signInDialog;
     DatabaseReference databaseReference;
     FirebaseUser user;
+    PlaySound ps = new PlaySound();
+    int length;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private GoogleApiClient mGoogleApiClient;
+
+    public static boolean haveNetworkConnection(Context context) {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    public static void ShowNoInternetDialog(final Context context) {
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        // set title
+        alertDialogBuilder.setTitle("No Internet Connectivity !");
+        alertDialogBuilder.setMessage("Turn On WiFi or Mobile-Data and refresh the App");
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Refresh", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        if (!haveNetworkConnection(context))
+                            MarathonMode.ShowNoInternetDialog(context);
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        length = ps.pauseBackgroundMusic();
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
@@ -140,6 +192,8 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ps.resumeBackgroundMusic(length);
+                play(0);
                 signInDialog.dismiss();
                 finish();
             }
@@ -147,6 +201,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                play(0);
                 signInDialog.dismiss();
                 SelectMode.level = 0;
                 SelectMode.time = 0;
@@ -157,6 +212,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                play(0);
                 if(haveNetworkConnection(MarathonMode.this)) {
                     if(isAuthenticateUser)
                     {
@@ -170,6 +226,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                         databaseReference.child(user.getUid()).child("name").
                                     setValue(user.getDisplayName());
                         Toast.makeText(MarathonMode.this, "Scored Shared", Toast.LENGTH_LONG).show();
+                        ps.resumeBackgroundMusic(length);
                         finish();
                     }else  signIn();
                 }else ShowNoInternetDialog(MarathonMode.this);
@@ -346,6 +403,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         TextView temp = (TextView) v;
         if (count < arrayofinput.length && !temp.getText().toString().equalsIgnoreCase("") && Integer.parseInt(temp.getText().toString()) == arrayofinput[count] ) {
             count++;
+            play(0);
             String one=input.getText().toString();
             String inserted=one.substring(0,count);
             String tobeInsert=one.substring(count,one.length());
@@ -359,8 +417,10 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                 showCustomDialog();
             }
             else ResetGrid(list);
+        } else {
+            play(1);
+            simpleChronometer.setBase(simpleChronometer.getBase() - 800);
         }
-        else simpleChronometer.setBase(simpleChronometer.getBase() - 800);
     }
 
     private void showCustomDialog() {
@@ -377,6 +437,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                play(0);
                 dialog.dismiss();
                 SelectMode.level++;
                 startActivity(new Intent(MarathonMode.this, MarathonMode.class));
@@ -440,6 +501,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
+        play(1);
         timeWhenStopped = simpleChronometer.getBase() - SystemClock.elapsedRealtime();
         simpleChronometer.stop();
         final Dialog dialog =new Dialog(this);
@@ -455,6 +517,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                play(0);
                 dialog.dismiss();
                 SelectMode.level=0;
                 SelectMode.time=0;
@@ -465,6 +528,8 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ps.resumeBackgroundMusic(length);
+                play(0);
                 dialog.dismiss();
                 finish();
             }
@@ -472,6 +537,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                play(0);
                 simpleChronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
                 simpleChronometer.start();
                 dialog.dismiss();
@@ -572,55 +638,16 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
-    public static boolean haveNetworkConnection(Context context) {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
-
-    public static void ShowNoInternetDialog( final Context context)
-    {
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                context);
-
-        // set title
-        alertDialogBuilder.setTitle("No Internet Connectivity !");
-        alertDialogBuilder.setMessage("Turn On WiFi or Mobile-Data and refresh the App");
-
-        // set dialog message
-        alertDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("Refresh", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                        if (!haveNetworkConnection(context))
-                            MarathonMode.ShowNoInternetDialog(context);
-
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // show it
-        alertDialog.show();
-    }
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
+
+    private void play(int type) {
+        try {
+            ps.createSound(this, type);
+            ps.playSound();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

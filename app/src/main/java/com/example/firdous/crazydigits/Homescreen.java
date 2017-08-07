@@ -11,9 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -31,13 +30,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.io.IOException;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class Homescreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class Homescreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, OnClickListener {
+    public static int length = 0;
     PrefManager pref;
     String TAG="see";
-    ProgressDialog dialog;
+    Dialog dialog;
     FirebaseUser user;
+    PlaySound ps = new PlaySound();
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleApiClient mGoogleApiClient;
@@ -55,57 +58,11 @@ public class Homescreen extends AppCompatActivity implements GoogleApiClient.OnC
                 user = firebaseAuth.getCurrentUser();
             }
         };
-        final Button play=(Button)findViewById(R.id.play);
-         play.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-                       startActivity(new Intent(Homescreen.this, SelectMode.class));
-             }
-         });
-        Button exit=(Button)findViewById(R.id.exit);
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              showCustomDialog();
-            }
-        });
-
-        findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse("market://details?id=" + Homescreen.this.getPackageName());
-                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-                goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
-                        Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
-                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                finish();
-                try {
-                    startActivity(goToMarket);
-                } catch (ActivityNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://play.google.com/store/apps/details?id=" + Homescreen.this.getPackageName())));
-                    finish();
-                }
-            }
-        });
-        ImageView menu =(ImageView)findViewById(R.id.menu);
-        menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Homescreen.this, OtherMenus.class));
-            }
-        });
-        findViewById(R.id.leaderboard).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (user != null) {
-                    Intent i = new Intent(Homescreen.this, LeaderBoard.class);
-                    i.putExtra("user", user.getUid());
-                    startActivity(i);
-                }
-                else signIn();
-            }
-        });
+        findViewById(R.id.play).setOnClickListener(this);
+        findViewById(R.id.exit).setOnClickListener(this);
+        findViewById(R.id.share).setOnClickListener(this);
+        findViewById(R.id.menu).setOnClickListener(this);
+        findViewById(R.id.leaderboard).setOnClickListener(this);
     }
 
     private void signIn() {
@@ -150,6 +107,12 @@ public class Homescreen extends AppCompatActivity implements GoogleApiClient.OnC
     @Override
     public void onStart() {
         super.onStart();
+        try {
+            ps.createSoundBackground(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ps.playSoundBackground();
         mAuth.addAuthStateListener(mAuthListener);
     }
 
@@ -192,40 +155,104 @@ public class Homescreen extends AppCompatActivity implements GoogleApiClient.OnC
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-
-
     void showCustomDialog()
     {
-        final Dialog dialog = new Dialog(Homescreen.this);
+        dialog = new Dialog(Homescreen.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.confirmexitdialog);
         dialog.setCancelable(true);
         dialog.show();
 
-        Button yes = (Button) dialog.findViewById(R.id.yes);
-        Button no = (Button) dialog.findViewById(R.id.no);
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                finish();
-            }
-        });
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        dialog.findViewById(R.id.yes).setOnClickListener(this);
+        dialog.findViewById(R.id.no).setOnClickListener(this);
     }
 
     @Override
     public void onBackPressed() {
+        play(1);
         showCustomDialog();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
+
+    @Override
+    public void onClick(View view) {
+
+
+        switch (view.getId()) {
+            case R.id.play:
+                play(0);
+                startActivity(new Intent(Homescreen.this, SelectMode.class));
+                break;
+            case R.id.exit:
+                play(1);
+                showCustomDialog();
+                break;
+            case R.id.share:
+                play(0);
+                Uri uri = Uri.parse("market://details?id=" + Homescreen.this.getPackageName());
+                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                        Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                finish();
+                try {
+                    startActivity(goToMarket);
+                } catch (ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://play.google.com/store/apps/details?id=" + Homescreen.this.getPackageName())));
+                    finish();
+                }
+                break;
+
+            case R.id.menu:
+                play(0);
+                startActivity(new Intent(Homescreen.this, OtherMenus.class));
+                break;
+
+            case R.id.yes:
+                play(0);
+                dialog.dismiss();
+                finish();
+                break;
+
+            case R.id.no:
+                play(0);
+                dialog.dismiss();
+                break;
+
+            default:
+                play(0);
+                if (user != null) {
+                    Intent i = new Intent(Homescreen.this, LeaderBoard.class);
+                    i.putExtra("user", user.getUid());
+                    startActivity(i);
+                } else signIn();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ps.destroyObject();
+        ps.destroyObjectBackground();
+    }
+
+    private void play(int type) {
+        try {
+            ps.createSound(this, type);
+            ps.playSound();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ps.resumeBackgroundMusic(length);
+    }
+
 }

@@ -8,30 +8,46 @@
         android:icon="@drawable/logo"
         android:label="Crazy Digits"
         android:theme="@style/AppTheme">
-        <activity android:name=".Homescreen">
+        <activity
+            android:name=".Homescreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SelectLevel"
-            android:label="@string/title_activity_select_level" />
-        <activity android:name=".SelectDificulty" />
+            android:label="@string/title_activity_select_level"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SelectDificulty"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Tutorial"
-            android:label="@string/title_activity_tutorial" />
+            android:label="@string/title_activity_tutorial"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SelectMode"
-            android:label="@string/title_activity_select_mode" />
+            android:label="@string/title_activity_select_mode"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MarathonMode"
-            android:label="@string/title_activity_marathon_mode" />
-        <activity android:name=".OtherMenus" />
-        <activity android:name=".Aboutus" />
-        <activity android:name=".LeaderBoard"></activity>
+            android:label="@string/title_activity_marathon_mode"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".OtherMenus"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Aboutus"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LeaderBoard"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

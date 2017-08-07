@@ -3,8 +3,8 @@ package com.example.firdous.crazydigits;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.View;
 import android.view.Window;
@@ -60,6 +60,7 @@ public class Tutorial extends AppCompatActivity implements View.OnClickListener{
             }
         });
     }
+
     void setDatatoDialog()
     {
         switch (dialogcount) {
@@ -98,7 +99,8 @@ public class Tutorial extends AppCompatActivity implements View.OnClickListener{
                 finish();
         }
     }
-        public void onClick(View v) {
+
+    public void onClick(View v) {
             TextView temp = (TextView) v;
             if (count < arrayofinput.length && !temp.getText().toString().equalsIgnoreCase("") && Integer.parseInt(temp.getText().toString()) == arrayofinput[count] ) {
                 count++;
@@ -149,6 +151,7 @@ public class Tutorial extends AppCompatActivity implements View.OnClickListener{
         }
         ResetGrid(list);
     }
+
     void ResetGrid(ArrayList<Integer> list)
     {
         for (int i = 0; i < t.length; i++)
@@ -160,6 +163,7 @@ public class Tutorial extends AppCompatActivity implements View.OnClickListener{
             t[list.get(i)].setText("" + i);
 
     }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));

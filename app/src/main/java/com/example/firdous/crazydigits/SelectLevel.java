@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -17,6 +18,7 @@ public class SelectLevel extends AppCompatActivity
         implements ImageAdapter.ItemClickListener{
     public static ArrayList<LevelStatus> levelStatusArrayList;
     public  static int postion;
+    PlaySound ps = new PlaySound();
     PrefManager pref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +73,11 @@ public class SelectLevel extends AppCompatActivity
 
        if(!levelStatusArrayList.get(position).isLocked())
        {
+           play(0);
            postion = position;
            startActivity(new Intent(SelectLevel.this, MainActivity.class));
            finish();
-       }
+       } else play(1);
 
     }
     @Override
@@ -84,7 +87,17 @@ public class SelectLevel extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        play(1);
         finish();
         startActivity(new Intent(SelectLevel.this, SelectDificulty.class));
+    }
+
+    private void play(int type) {
+        try {
+            ps.createSound(this, type);
+            ps.playSound();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
