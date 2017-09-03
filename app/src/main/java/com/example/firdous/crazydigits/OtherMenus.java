@@ -3,8 +3,8 @@ package com.example.firdous.crazydigits;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -53,7 +53,10 @@ public class OtherMenus extends AppCompatActivity {
                         email.setType("message/rfc822");
                         startActivity(Intent.createChooser(email, "Choose an Email client :"));
                         break;
-                    case 4: break;
+
+                    case 3:
+                        startActivity(new Intent(OtherMenus.this, Credits.class));
+                        break;
                 }
             }
         });

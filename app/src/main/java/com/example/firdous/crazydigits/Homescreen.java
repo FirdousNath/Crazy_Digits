@@ -4,10 +4,12 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -49,7 +51,60 @@ public class Homescreen extends AppCompatActivity implements GoogleApiClient.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homescreen);
-        pref= new PrefManager(this);
+        pref = new PrefManager(this);
+//        Log.d("total",""+pref.getTotal());
+        if (!pref.isFirstTime()) {
+            pref.setTOTAL(0);
+            pref.setIsRated(false);
+        } else {
+            if (pref.getTotal() == 0)
+                pref.setTOTAL(1);
+            else {
+
+                if (!pref.getIsRated()) {
+                    pref.setTOTAL(pref.getTotal() + 1);
+                    if ((pref.getTotal() % 6) == 0) {
+                        pref.setTOTAL(0);
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                this);
+
+                        // set title
+                        alertDialogBuilder.setMessage("Kindly Rate us 5 star");
+
+                        // set dialog message
+                        alertDialogBuilder
+                                .setCancelable(true)
+                                .setPositiveButton("kindly rate us", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        Uri uri = Uri.parse("market://details?id=" + Homescreen.this.getPackageName());
+                                        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                                        // To count with Play market backstack, After pressing back button,
+                                        // to taken back to our application, we need to add following flags to intent.
+                                        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                                                Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                                                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                        try {
+                                            startActivity(goToMarket);
+                                        } catch (ActivityNotFoundException e) {
+                                            startActivity(new Intent(Intent.ACTION_VIEW,
+                                                    Uri.parse("http://play.google.com/store/apps/details?id=" + Homescreen.this.getPackageName())));
+                                        }
+                                    }
+                                })
+                                .setNegativeButton("never", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                        pref.setIsRated(true);
+                                    }
+                                });
+                        // create alert dialog
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        // show it
+                        alertDialog.show();
+                    }
+                }
+            }
+        }
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {

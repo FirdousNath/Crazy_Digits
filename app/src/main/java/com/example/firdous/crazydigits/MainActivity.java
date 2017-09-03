@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -35,8 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     long timeWhenStopped = 0;
     PlaySound ps = new PlaySound();
     int length;
+    MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        createSound();
         length = ps.pauseBackgroundMusic();
         super.onCreate(savedInstanceState);
         int avg[],min[];
@@ -230,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dialog.dismiss();
                 simpleChronometer = (Chronometer) findViewById(R.id.timer);
                 simpleChronometer.start();
+                playSound();
             }
         }.start();
     }
@@ -246,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             input.setText(Html.fromHtml(text));
             if(count == arrayofinput.length)
             {
+                pauseSound();
                 simpleChronometer.stop();
                 final Dialog dialog = new Dialog(MainActivity.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -255,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dialog.show();
                 Button retry = (Button) dialog.findViewById(R.id.retry);
                 Button next = (Button) dialog.findViewById(R.id.next);
+                Button challenge = (Button) dialog.findViewById(R.id.challenge_friend);
 
                 final boolean nextLevelunlocked=showStarsOnDialog(dialog, next);
 
@@ -272,6 +279,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         play(0);
                         dialog.dismiss();
                         callRetry(nextLevelunlocked);
+                    }
+                });
+                challenge.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        play(0);
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT,
+                                "I completed level " + (SelectLevel.postion + 1) + " in " +
+                                        (simpleChronometer.getTimeElapsed() / 1000.00)
+                                        + " seconds" +
+                                        "\nCan you complete this level in less time ? I bet you cannot" +
+                                        "\n\nDownload now :\nhttp://play.google.com/store/apps/details?id="
+                                        + MainActivity.this.getPackageName());
+                        sendIntent.setType("text/plain");
+                        startActivity(sendIntent);
+                        dialog.dismiss();
                     }
                 });
             }
@@ -394,11 +419,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
+        pauseSound();
         play(1);
         showPauseDialog();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
     private void showPauseDialog() {
+        pauseSound();
         timeWhenStopped = simpleChronometer.getBase() - SystemClock.elapsedRealtime();
         simpleChronometer.stop();
         final Dialog dialog =new Dialog(this);
@@ -433,6 +469,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                playSound();
                 play(0);
                 simpleChronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
                 simpleChronometer.start();
@@ -449,5 +486,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createSound() {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setLooping(true);
+        String path = "android.resource://com.firdous.crazydigits/raw/";
+        try {
+            mediaPlayer.setDataSource(this, Uri.parse(path + "clock"));
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void playSound() {
+        if (mediaPlayer.isPlaying())
+            mediaPlayer.seekTo(0);
+        else mediaPlayer.start();
+    }
+
+    private void pauseSound() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying())
+            mediaPlayer.pause();
     }
 }

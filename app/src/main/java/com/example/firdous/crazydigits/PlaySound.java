@@ -26,6 +26,10 @@ public class PlaySound {
         String path = "android.resource://com.firdous.crazydigits/raw/";
         switch (type) {
             case 0:
+                mediaPlayer.setDataSource(context, Uri.parse(path + "blop"));
+                mediaPlayer.prepare();
+                break;
+            case 2:
                 mediaPlayer.setDataSource(context, Uri.parse(path + "click"));
                 mediaPlayer.prepare();
                 break;

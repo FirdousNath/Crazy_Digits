@@ -47,7 +47,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".LeaderBoard"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".Credits"></activity>
     </application>
 
 </manifest>

@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -67,6 +69,8 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
     FirebaseUser user;
     PlaySound ps = new PlaySound();
     int length;
+    MediaPlayer mediaPlayer;
+    boolean reverseMode = false;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleApiClient mGoogleApiClient;
@@ -120,6 +124,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        createSound();
         length = ps.pauseBackgroundMusic();
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
@@ -132,6 +137,8 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         blink.setRepeatCount(2);
         if( SelectMode.level > 7 && (SelectMode.level % 8 ) == 0 )
         blinkmode.setText("Blink Mode ON");
+        else if (reverseMode)
+            blinkmode.setText("Reverse Mode");
         else blinkmode.setText("");
         simpleChronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
@@ -150,7 +157,6 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                             at.setVisibility(View.VISIBLE);
                     }
                 }
-
 
                 if (chronometer.getTimeElapsed() / 1000.0 < 0.9 ) {
                     chronometer.stop();
@@ -174,7 +180,32 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         };
     }
 
+    private void createSound() {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setLooping(true);
+        String path = "android.resource://com.firdous.crazydigits/raw/";
+        try {
+            mediaPlayer.setDataSource(this, Uri.parse(path + "clock"));
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void playSound() {
+        if (mediaPlayer.isPlaying())
+            mediaPlayer.seekTo(0);
+        else mediaPlayer.start();
+    }
+
+    private void pauseSound() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying())
+            mediaPlayer.pause();
+    }
+
     private void showMarathonScore() {
+        pauseSound();
         simpleChronometer.setText("00:00:00");
         signInDialog=new Dialog(this);
         signInDialog.setCancelable(false);
@@ -338,6 +369,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
             }
 
         }
+        reverseMode = SelectMode.level > 4 && SelectMode.level % 5 == 0;
         switch (choice) {
             case  0:
                 setContentView(R.layout.activity_main);
@@ -395,35 +427,58 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                 simpleChronometer = (Chronometer) findViewById(R.id.timer);
                 simpleChronometer.setBase(SystemClock.elapsedRealtime() + MAXINTERVEL);
                 simpleChronometer.start();
+                playSound();
             }
         }.start();
     }
 
     public void onClick(View v) {
         TextView temp = (TextView) v;
-        if (count < arrayofinput.length && !temp.getText().toString().equalsIgnoreCase("") && Integer.parseInt(temp.getText().toString()) == arrayofinput[count] ) {
-            count++;
-            play(0);
-            String one=input.getText().toString();
-            String inserted=one.substring(0,count);
-            String tobeInsert=one.substring(count,one.length());
-            String text = "<font color=#08C279>"+inserted+"</font>"+tobeInsert;
-            input.setText(Html.fromHtml(text));
+        if (!reverseMode) {
+            if (count < arrayofinput.length && !temp.getText().toString().equalsIgnoreCase("") && Integer.parseInt(temp.getText().toString()) == arrayofinput[count]) {
+                count++;
+                play(0);
+                String one = input.getText().toString();
+                String inserted = one.substring(0, count);
+                String tobeInsert = one.substring(count, one.length());
+                String text = "<font color=#08C279>" + inserted + "</font>" + tobeInsert;
+                input.setText(Html.fromHtml(text));
 
-            if(count == arrayofinput.length)
-            {
-                simpleChronometer.stop();
-                SelectMode.time+=MAXINTERVEL-simpleChronometer.getTimeElapsed();
-                showCustomDialog();
+                if (count == arrayofinput.length) {
+                    simpleChronometer.stop();
+                    SelectMode.time += MAXINTERVEL - simpleChronometer.getTimeElapsed();
+                    showCustomDialog();
+                } else ResetGrid(list);
+            } else {
+                play(1);
+                simpleChronometer.setBase(simpleChronometer.getBase() - 800);
             }
-            else ResetGrid(list);
         } else {
-            play(1);
-            simpleChronometer.setBase(simpleChronometer.getBase() - 800);
+            if (count > 0
+                    && !temp.getText().toString().equalsIgnoreCase("")
+                    && Integer.parseInt(temp.getText().toString()) == arrayofinput[count - 1]) {
+                count--;
+                play(0);
+                String one = input.getText().toString();
+                String inserted = one.substring(0, count);
+                String tobeInsert = one.substring(count, one.length());
+                String text = inserted + "<font color=#08C279>" + tobeInsert + "</font>";
+                input.setText(Html.fromHtml(text));
+
+                if (count == 0) {
+                    simpleChronometer.stop();
+                    SelectMode.time += MAXINTERVEL - simpleChronometer.getTimeElapsed();
+                    showCustomDialog();
+                } else ResetGrid(list);
+            } else {
+                play(1);
+                simpleChronometer.setBase(simpleChronometer.getBase() - 800);
+            }
         }
     }
 
     private void showCustomDialog() {
+        pauseSound();
         final Dialog dialog =new Dialog(this);
         dialog.setCancelable(false);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -466,6 +521,9 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
 
         Collections.reverse(array);
         arrayofinput = new int[array.size()];
+        if (reverseMode)
+            count = array.size();
+        else count = 0;
 
         for (int i = 0; i < array.size(); i++)
             arrayofinput[i] = array.get(i);
@@ -501,6 +559,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
+        pauseSound();
         play(1);
         timeWhenStopped = simpleChronometer.getBase() - SystemClock.elapsedRealtime();
         simpleChronometer.stop();
@@ -541,6 +600,7 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
                 simpleChronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
                 simpleChronometer.start();
                 dialog.dismiss();
+                playSound();
             }
         });
 
@@ -598,6 +658,10 @@ public class MarathonMode extends AppCompatActivity implements View.OnClickListe
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
+        }
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
     }
 
